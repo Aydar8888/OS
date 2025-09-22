@@ -2,11 +2,13 @@
 #include <unistd.h>
 #include <string.h>
 #include "sys/wait.h"
+#include <stdlib.h>
+#include <fcntl.h>
 
 int main() {
-    int pipe_fd[2];
+    int pipe_fd[2]; // pipe_fd[0] - чтение, pipe_fd[1] - запись 
     char file_name[256];
-    int number;
+    double num;
 
     int err = pipe(pipe_fd);
     if (err == -1) {
@@ -22,23 +24,29 @@ int main() {
     }
 
     pid_t pid = fork();
+    
     if (pid == 0) {
+        close(pipe_fd[0]);
+        dup2(pipe_fd[1], STDOUT_FILENO);
         close(pipe_fd[1]);
-        dup2(pipe_fd[0], STDIN_FILENO);
         execl("./child", "child", file_name, NULL);
-        perror("execl failed");
-        return -1;
+        perror("execl");
+        exit(0);
     } else {
-        close(pipe_fd[0]); // pipe_fd[0] - чтение, pipe_fd[1] - запись    
-        printf("Введите числа через пробел (Ctrl+D для завершения):\n");
-        while (scanf("%d", &number) == 1) {
-            write(pipe_fd[1], &number, sizeof(number));
+        close(pipe_fd[1]);
+        char buffer[256];
+        ssize_t n;
+        while ((n = read(pipe_fd[0], buffer, sizeof(buffer) - 1)) > 0) {
+            buffer[n] = '\0';  
+            printf("%s", buffer);
         }
-        close(pipe_fd[1]); 
-        wait(NULL);      
+        if (n == -1) {
+            perror("read");
+        }
+        close(pipe_fd[0]);
+        wait(NULL);
+        printf("\n");
     }
 }
 
-
-
-
+   
