@@ -3,7 +3,7 @@
 #include <string.h>
 #include "sys/wait.h"
 #include <stdlib.h>
-#include <fcntl.h>
+
 
 int main() {
     int pipe_fd[2]; // pipe_fd[0] - чтение, pipe_fd[1] - запись 
@@ -36,9 +36,8 @@ int main() {
         close(pipe_fd[1]);
         char buffer[256];
         ssize_t n;
-        while ((n = read(pipe_fd[0], buffer, sizeof(buffer) - 1)) > 0) {
-            buffer[n] = '\0';  
-            printf("%s", buffer);
+        while ((n = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
+            write(STDOUT_FILENO, buffer, n);  
         }
         if (n == -1) {
             perror("read");
