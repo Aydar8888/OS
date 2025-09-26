@@ -10,17 +10,17 @@ int main() {
     char file_name[256];
     double num;
 
-    int err = pipe(pipe_fd);
-    if (err == -1) {
-        perror("pipe");
-        return -1;
-    }
-
     printf("Введите имя файла >> ");
     fgets(file_name, sizeof(file_name), stdin);
     size_t len = strlen(file_name);
     if (len > 0 && file_name[len - 1] == '\n') {
         file_name[len - 1] = '\0';
+    }
+
+    int err = pipe(pipe_fd);
+    if (err == -1) {
+        perror("pipe");
+        return -1;
     }
 
     pid_t pid = fork();
@@ -33,7 +33,7 @@ int main() {
         perror("execl");
         exit(0);
     } else {
-        close(pipe_fd[1]);
+        close(pipe_fd[1]);        
         char buffer[256];
         ssize_t n;
         while ((n = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
