@@ -8,13 +8,11 @@
 int main() {
     int pipe_fd[2]; // pipe_fd[0] - чтение, pipe_fd[1] - запись 
     char file_name[256];
-    double num;
 
     printf("Введите имя файла >> ");
-    fgets(file_name, sizeof(file_name), stdin);
-    size_t len = strlen(file_name);
-    if (len > 0 && file_name[len - 1] == '\n') {
-        file_name[len - 1] = '\0';
+    if (scanf("%s", file_name) != 1) {
+        fprintf(stderr, "Ошибка прочтения имени файла\n");
+        return -1;
     }
 
     int err = pipe(pipe_fd);
@@ -27,7 +25,11 @@ int main() {
     
     if (pid == 0) {
         close(pipe_fd[0]);
-        dup2(pipe_fd[1], STDOUT_FILENO);
+        if (dup2(pipe_fd[1], STDOUT_FILENO) == -1) {
+            perror("dup2");
+            close(pipe_fd[1]);
+            exit(1);
+        }
         close(pipe_fd[1]);
         execl("./child", "child", file_name, NULL);
         perror("execl");
@@ -35,7 +37,7 @@ int main() {
     } else {
         close(pipe_fd[1]);        
         char buffer[256];
-        ssize_t n;
+        int n;
         while ((n = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
             write(STDOUT_FILENO, buffer, n);  
         }

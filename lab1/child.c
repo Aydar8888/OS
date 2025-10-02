@@ -16,7 +16,11 @@ int main(int argc, char *argv[]) {
         perror("Ошибка открытия файла");
         return -1;
     }
-    dup2(file, STDIN_FILENO);
+    if (dup2(file, STDIN_FILENO) == -1) {
+        perror("dup2");
+        close(file);
+        exit(1);
+    }
     close(file);
     double first_number, num; 
     if (scanf("%lf", &first_number) == 1) {
@@ -32,21 +36,3 @@ int main(int argc, char *argv[]) {
 }
 
 
-
- // double first_number, num;
-    // char buffer[64];
-    
-    // if (scanf("%lf", &first_number) == 1) {
-    //     int len = snprintf(buffer, 64, "%lf ", first_number);
-    //     write(STDOUT_FILENO, buffer, len);
-    // }
-    
-    // while (scanf("%lf", &num) == 1) {
-    //     if (num == 0) {
-    //         exit(0);
-    //     }
-    //     int len = snprintf(buffer, 64, "%lf ", num / first_number);
-    //     write(STDOUT_FILENO, buffer, len);
-    // }
-    
-    // return 0;

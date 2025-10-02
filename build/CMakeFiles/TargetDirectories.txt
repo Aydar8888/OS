@@ -1,0 +1,6 @@
+/home/aidar/Документы/studies/osi/build/CMakeFiles/edit_cache.dir
+/home/aidar/Документы/studies/osi/build/CMakeFiles/rebuild_cache.dir
+/home/aidar/Документы/studies/osi/build/lab1/CMakeFiles/child.dir
+/home/aidar/Документы/studies/osi/build/lab1/CMakeFiles/parent.dir
+/home/aidar/Документы/studies/osi/build/lab1/CMakeFiles/edit_cache.dir
+/home/aidar/Документы/studies/osi/build/lab1/CMakeFiles/rebuild_cache.dir
