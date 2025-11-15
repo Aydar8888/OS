@@ -33,7 +33,7 @@ double max_area = 0.0;
 pthread_mutex_t result_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 data* generate_points() {
-    int n = 1050;
+    int n = 1000;
     
     point* points = malloc(sizeof(point) * n);
     if (points == NULL) {
@@ -216,9 +216,9 @@ int main(int argc, char* argv[]) {
 
     clock_gettime(CLOCK_MONOTONIC, &end); 
 
-    double elapsed = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+    double t = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
     printf("Максимальная площадь: %lf\n", max_area);
-    printf("Время выполнения: %lf секунд\n", elapsed);
+    printf("Время выполнения: %lf секунд\n", t);
 
     free(triangles);
     free(input_data->points);

@@ -1,1 +1,0 @@
-/usr/bin/gcc  -Wall -Wextra -g -Wl,--dependency-file=CMakeFiles/parent.dir/link.d CMakeFiles/parent.dir/parent.c.o -o parent
